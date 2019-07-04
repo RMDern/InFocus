@@ -6,16 +6,20 @@ const electron = require('electron');
 
 // todo: blur pass only applied after threshold, increases nonlinearly
 
-let scene, camera, renderer, video, vidTexture, vidPlane, composer, blurPass;
-let divergence;
+let scene, camera, renderer, clock,
+    video, vidTexture, vidPlane, 
+    composer, blurPass, renderPass;
+
+let divergence, toggle;
 const width = window.innerWidth;
 const height = window.innerHeight;
 const ratio = width / height;
 
-let simMode = false;
+let simMode = true;
 let gazePosShouldReset = true, gazePosReverse = false;
 let leftMap, leftMaterial, leftGeometry, leftCircle;
 let rightMap, rightMaterial, rightGeometry, rightCircle;
+
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
@@ -147,11 +151,19 @@ const init = () => {
 
     // Create a postprocessing EffectComposer to setup render pass chain
     composer = new P.EffectComposer(renderer);
-    blurPass = new P.BlurPass();
 
-    composer.addPass(new P.RenderPass(scene, camera));
+    // Add two render passes to the composer: 
+    // One with blur, one without.
+    blurPass = new P.BlurPass();
+    renderPass = new P.RenderPass(scene, camera);
+    blurPass.initialize();
+    renderPass.initialize();
+    composer.addPass(renderPass);
     composer.addPass(blurPass);
-    blurPass.renderToScreen = true;
+    renderPass.enabled = true;
+    renderPass.renderToScreen = true;
+    blurPass.enabled = false;
+    blurPass.renderToScreen = false;
     blurPass.kernelSize = 2;
     blurPass.setResolutionScale(1.00);
 
@@ -159,7 +171,8 @@ const init = () => {
         initSim();
     }
 
-    let clock = new THREE.Clock();
+    clock = new THREE.Clock();
+    toggle = true;
 
     const render = () => {
         if (simMode) {
@@ -167,11 +180,31 @@ const init = () => {
         }
         adjustDivergence();
         blurPass.setResolutionScale(divergence);
+        if (toggle) {
+            if (divergence > 0.5) {
+                toggleRenderPass();
+                toggle = false;
+            }   
+        }
+        else {
+            if (divergence < 0.5) {
+                toggleRenderPass();
+                toggle = true;
+            }
+        }
         requestAnimationFrame(render);
         composer.render(clock.getDelta());
     };
     render();
 };
+
+
+function toggleRenderPass() {
+    blurPass.renderToScreen = !blurPass.renderToScreen;
+    renderPass.renderToScreen = !renderPass.renderToScreen;
+    blurPass.enabled = !blurPass.enabled;
+    renderPass.enabled = !renderPass.enabled;
+}
 
 
 function getMousePos() {
