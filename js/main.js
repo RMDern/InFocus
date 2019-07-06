@@ -163,7 +163,7 @@ const init = () => {
     renderPass.enabled = true;
     renderPass.renderToScreen = true;
     blurPass.enabled = false;
-    blurPass.renderToScreen = false;
+    blurPass.renderToScreen = true;
     blurPass.kernelSize = 2;
     blurPass.setResolutionScale(1.00);
 
@@ -200,10 +200,8 @@ const init = () => {
 
 
 function toggleRenderPass() {
-    blurPass.renderToScreen = !blurPass.renderToScreen;
-    renderPass.renderToScreen = !renderPass.renderToScreen;
     blurPass.enabled = !blurPass.enabled;
-    renderPass.enabled = !renderPass.enabled;
+    renderPass.renderToScreen = !blurPass.enabled;
 }
 
 
