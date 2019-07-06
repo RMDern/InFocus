@@ -10,7 +10,8 @@ let scene, camera, renderer, clock,
     video, vidTexture, vidPlane, 
     composer, blurPass, renderPass;
 
-let divergence, toggle;
+let divergence, blurThreshold = 0.5;
+let isBlurEnabled = true;
 const width = window.innerWidth;
 const height = window.innerHeight;
 const ratio = width / height;
@@ -167,31 +168,27 @@ const init = () => {
     blurPass.kernelSize = 2;
     blurPass.setResolutionScale(1.00);
 
+    isBlurEnabled = false;
+
     if (simMode) {
         initSim();
     }
 
     clock = new THREE.Clock();
-    toggle = true;
 
     const render = () => {
         if (simMode) {
             simulate();
         }
+
         adjustDivergence();
         blurPass.setResolutionScale(divergence);
-        if (toggle) {
-            if (divergence > 0.5) {
-                toggleRenderPass();
-                toggle = false;
-            }   
+
+        if (divergenceThresholdReached()) {
+            isBlurEnabled = !isBlurEnabled;
+            toggleRenderPass();
         }
-        else {
-            if (divergence < 0.5) {
-                toggleRenderPass();
-                toggle = true;
-            }
-        }
+
         requestAnimationFrame(render);
         composer.render(clock.getDelta());
     };
@@ -229,6 +226,26 @@ function adjustDivergence() {
         let corner = new THREE.Vector2(window.innerWidth, 0);
         let maxDist = windowCenter.distanceTo(corner);
         divergence = 1.00 - (dist / maxDist);
+    }
+}
+
+
+function divergenceThresholdReached() {
+    if (isBlurEnabled) {
+        if (divergence > blurThreshold) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    } 
+    else {
+        if (divergence < blurThreshold) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 
