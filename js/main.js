@@ -180,7 +180,7 @@ const init = () => {
         }
 
         adjustDivergence();
-        blurPass.setResolutionScale(divergence);
+        blurPass.setResolutionScale(divergence + blurThreshold);
 
         if (divergenceThresholdReached()) {
             isBlurEnabled = !isBlurEnabled;
