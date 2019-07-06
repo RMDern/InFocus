@@ -4,13 +4,11 @@ const electron = require('electron');
 //const gazejs = require('gazejs');
 //let eyeTracker = gazejs.createEyeTracker(gazejs.SR_EYELINK_SDK);
 
-// todo: blur pass only applied after threshold, increases nonlinearly
-
 let scene, camera, renderer, clock,
     video, vidTexture, vidPlane, 
     composer, blurPass, renderPass;
 
-let divergence, blurThreshold = 0.5;
+let divergence, blurThreshold = 0.6;  // to do: blur increases nonlinearly after second threshold 
 let isBlurEnabled = true;
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -43,7 +41,7 @@ function initSim() {
     rightCircle = new THREE.Mesh(rightGeometry, rightMaterial);
     rightCircle.position.x = 0;
     rightCircle.position.y = 0;
-    rightCircle.position.z = 1;
+    rightCircle.position.z = 2;
     scene.add(rightCircle);
 }
 
@@ -225,7 +223,7 @@ function adjustDivergence() {
         let dist = windowCenter.distanceTo(target);
         let corner = new THREE.Vector2(window.innerWidth, 0);
         let maxDist = windowCenter.distanceTo(corner);
-        divergence = 1.00 - (dist / maxDist);
+        divergence = 1.00 - (dist*1.5 / maxDist);
     }
 }
 
