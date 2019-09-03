@@ -14,10 +14,12 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 const ratio = width / height;
 
+//*********** Simulation Variables ********************/
 let simMode = true;
 let gazePosShouldReset = true, gazePosReverse = false;
 let leftMap, leftMaterial, leftGeometry, leftCircle;
 let rightMap, rightMaterial, rightGeometry, rightCircle;
+//*****************************************************/
 
 
 function getRandomArbitrary(min, max) {
