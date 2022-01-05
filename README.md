@@ -4,4 +4,4 @@ GazeHelper is an eye-tracking research tool intended to study the potential reli
 
 GazeHelper is provided as an [Electron](https://www.electronjs.org/) desktop app that supports the [SR Research EyeLink](https://www.sr-research.com/) eye-tracker. 
 
-Developed by [Ryan Dern](https://github.com/RMDern) under the guidance of Professor Marc Pomplun in the [Visual Attention Laboratory](https://www.cs.umb.edu/~marc/lab/gallery.html) at the University of Massachusetts Boston.
+Developed by [Ryan Dern](https://github.com/RMDern) under the guidance of Professor Marc Pomplun in the [Visual Attention Laboratory](https://www.cs.umb.edu/~marc/lab/chi%20siamo.html) at the University of Massachusetts Boston.
