@@ -15,6 +15,6 @@
     "electron-reload": "^1.4.0",
     "gazejs": "^0.5.1-5",
     "postprocessing": "^6.3.2",
-    "three": "^0.104.0"
+    "three": "^0.125.0"
   }
 }
